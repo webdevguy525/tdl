@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Tasks</title>
+
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/datepicker.css' %}">
+        <link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+        <link rel="stylesheet" href="{% static 'css/jasny-bootstrap.min.css' %}">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{% url 'list_tasks' %}">Task List</a>
+                </div>
+                {% if user.is_authenticated %}
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <form class="navbar-form navbar-left" action="{% url 'create_task' %}">
+                                    <button class="btn btn-default">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                </form>
+                            </li>
+                            <li {% if incomplete_menu %}class="active"{% endif %}>
+                            <a href="{% url 'list_incomplete_tasks' %}"><span class='glyphicon glyphicon-minus-sign'></span> Incomplete Tasks</a>
+                            </li>
+                            <li {% if unreviewed_menu %}class="active"{% endif %}>
+                                <a href="{% url 'list_unreviewed_tasks' %}">
+                                    <span class='glyphicon glyphicon-thumbs-up'></span> Unreviewed Tasks 
+                                    {% if unreviewed_task_count %}<span class="badge alert-info">{{ unreviewed_task_count }}</span>{% endif %}
+                                </a>
+                            </li>
+                            <li {% if completed_menu %}class="active"{% endif %}>
+                            <a href="{% url 'list_completed_tasks' %}"><span class='glyphicon glyphicon-ok'></span> Completed Tasks</a>
+                            </li>
+                            <li {% if report_menu %}class="active"{% endif %}>
+                            <a href="{% url 'report_home' %}"><span class='glyphicon glyphicon-stats'></span> Reports</a>
+                            </li>
+                        </ul>
+
+                        <form class="navbar-form navbar-right" action="{% url 'logout' %}">
+                            <button type="submit" class="btn btn-default logout-button" data-toggle="tooltip" data-placement="bottom" title="Logout">
+                                <span class="glyphicon glyphicon-log-out"></span>
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div><!-- /.container-fluid -->
+        </nav>
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
+        <script src="{% static 'js/jasny-bootstrap.min.js' %}"></script>
+        {% block extra_scripts %}
+        {% endblock %}
+    </body>
+
+    <script type="text/javascript">
+    $(function() {
+        $('.dateinput').datepicker();
+        $('.logout-button').tooltip();
+        $('table.rowlink').rowlink()
+        {% block js %}
+        {% endblock %}
+    });
+    </script>
+</html>

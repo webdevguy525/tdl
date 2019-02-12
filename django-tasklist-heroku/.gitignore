@@ -1,0 +1,8 @@
+*.pyc
+db.sqlite3
+dev_settings.py
+.coverage
+dumps
+myvenv
+.vscode
+local_settings.py
